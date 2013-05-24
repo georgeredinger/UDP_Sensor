@@ -32,7 +32,8 @@ int associate_with_access_point() {
   SpiSerial.print(join_cmd);SpiSerial.print("\r");echo();
 
   SpiSerial.print("set ip proto 1\r");echo();
-  SpiSerial.print("set ip host 255.255.255.255\r");echo();
+  //SpiSerial.print("set ip host 255.255.255.255\r");echo();
+  SpiSerial.print("set ip host 10.10.50.94\r");echo();
   SpiSerial.print("set ip remote 12345\r");echo();
 
   SpiSerial.print("save\r");echo();
