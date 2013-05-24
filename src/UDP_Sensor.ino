@@ -9,8 +9,15 @@ char count[16]="bogus";
 const int xpin = 2;
 const int ypin = 3;
 
+void echo() {
+    delay(500);
+    while(SpiSerial.available() > 0) {
+        Serial.print((char)SpiSerial.read());
+    }
+}
+
 int associate_with_access_point() {
-char ssid_cmd[64] = "set wlan ssid "; 
+  char ssid_cmd[64] = "set wlan ssid "; 
   char phrase_cmd[64] = "set wlan phrase " ;
   char join_cmd[64] =  "join ";
 
@@ -29,8 +36,6 @@ char ssid_cmd[64] = "set wlan ssid ";
   SpiSerial.print(phrase_cmd);SpiSerial.print("\r");echo();
   SpiSerial.print(join_cmd);SpiSerial.print("\r");echo();
 
-
-
   SpiSerial.print("set ip proto 1\r");echo();
   SpiSerial.print("set ip host 255.255.255.255\r");echo();
   SpiSerial.print("set ip remote 55555\r");echo();
@@ -45,7 +50,7 @@ char ssid_cmd[64] = "set wlan ssid ";
 
 
 
-int read_2125(int *x,*y) {
+int read_2125(int *x, int *y) {
   int debug = 0;
    // x axis (pitch)
   int tHx;      // length of HIGH pulse in microseconds
