@@ -22,9 +22,6 @@ int associate_with_access_point() {
   strcat(ssid_cmd,ssid);
   strcat(phrase_cmd,passphrase);
   strcat(join_cmd,ssid);
-  Serial.begin(9600);
-  Serial.println("\n\r\n\rWiFly Shield UDP blaster ");
-
   reset_now(); // allways start with factory defaults to insure  repeatable setup
 
   WiFly.begin();
@@ -36,7 +33,7 @@ int associate_with_access_point() {
 
   SpiSerial.print("set ip proto 1\r");echo();
   SpiSerial.print("set ip host 255.255.255.255\r");echo();
-  SpiSerial.print("set ip remote 55555\r");echo();
+  SpiSerial.print("set ip remote 12345\r");echo();
 
   SpiSerial.print("save\r");echo();
   SpiSerial.print("reboot\r");echo();

@@ -9,6 +9,15 @@ void setup_2125() {
 }
  
 int read_2125(int *x, int *y) {
+  //simulation test
+  static float _x;
+  static float _y;
+  *x = (int) (sin(_x)*100.0);
+  *y = (int) (cos(_y)*100.0);
+  _x+=0.01;
+  _y+=0.02;
+  return 1;
+
   int debug = 0;
    // x axis (pitch)
   int tHx;      // length of HIGH pulse in microseconds

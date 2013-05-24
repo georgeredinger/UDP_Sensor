@@ -1,6 +1,6 @@
 import socket
 
-UDP_PORT = 55555
+UDP_PORT = 12345
 MESSAGE = "Hello, World!"
 
 print "UDP target port:", UDP_PORT

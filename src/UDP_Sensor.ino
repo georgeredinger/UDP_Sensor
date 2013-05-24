@@ -24,6 +24,6 @@ void loop()
   sprintf(udp_message,"x=%d,y=%d\r",x,y);
   Send_UDP_Packet(udp_message);
 
-  delay(1000);
+  delay(100);
 
 }
