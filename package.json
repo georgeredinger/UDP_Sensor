@@ -23,7 +23,7 @@
     "test": "grunt test"
   },
   "devDependencies": {
-    "dgram": "*"
+    "socket.io": "*"
   },
   "keywords": []
 }
