@@ -1,6 +1,8 @@
-Nodejs UDP catch and throw. UDP packets pushed over websocket to browser
+Nodejs UDP catch and throw. 
 ====
 
+receive UDP packets and push them out over a websocket 
+----
 
 Receive JSON data via UDP packet addressed to local hosts IP address
 Send to web browser(s) via websockets
