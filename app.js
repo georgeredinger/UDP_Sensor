@@ -5,17 +5,15 @@ var app = require('http').createServer(handler)
   , io = require('socket.io').listen(app)
   , fs = require('fs')
 
-app.listen(8080);
+app.listen(8083);
 var server = dgram.createSocket('udp4');
 server.on('listening', function () {
-        var address = server.address();
-            console.log('UDP Server listening on ' + address.address + ":" + address.port);
+  var address = server.address();
+  console.log('UDP Server listening on ' + address.address + ":" + address.port);
 });
 
 
-
 server.bind(PORT, HOST);
-
 
 function handler (req, res) {
     fs.readFile(__dirname + '/index.html',
@@ -31,13 +29,13 @@ function handler (req, res) {
 }
 
 io.sockets.on('connection', function (socket) {
-    socket.emit('news', { hello: 'world' });
-    socket.on('my other event', function (data) {
-    console.log(data);
-    });
     server.on('message', function (message, remote) {
-          console.log(remote.address + ':' + remote.port +' - ' + message);
-          socket.emit('accel', { xy: message });
+        //  console.log(remote.address + ':' + remote.port +' - ' + message);
+          var accel =  {x:0,y:0};
+          accel = JSON.parse(message);
+          console.log(accel);
+
+          socket.emit("accel",accel);
 
     });
 
