@@ -22,7 +22,7 @@ int associate_with_access_point() {
   strcat(ssid_cmd,ssid);
   strcat(phrase_cmd,passphrase);
   strcat(join_cmd,ssid);
-  reset_now(); // allways start with factory defaults to insure  repeatable setup
+  //reset_now(); // allways start with factory defaults to insure  repeatable setup
 
   WiFly.begin();
 
