@@ -23,6 +23,7 @@ void loop()
 
   sprintf(udp_message,"{\"x\":\"%d\",\"y\":\"%d\"}",x,y);
   Send_UDP_Packet(udp_message);
+	Serial.println(udp_message);
 
   delay(100);
 

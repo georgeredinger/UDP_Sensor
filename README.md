@@ -10,6 +10,10 @@ Loop forever
 End
 
 
+
+ sudo tcpdump -i eth1 udp dst port 12345 -X
+
+
 Uses inotool from http://inotool.org
 
 
