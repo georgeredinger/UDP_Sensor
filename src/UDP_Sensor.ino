@@ -21,7 +21,7 @@ void loop()
 
   good_measurement = read_2125(&x,&y);
 
-  sprintf(udp_message,"%d,%d\r",x,y);
+  sprintf(udp_message,"{\"x\":\"%d\",\"y\":\"%d\"}",x,y);
   Send_UDP_Packet(udp_message);
 
   delay(100);
