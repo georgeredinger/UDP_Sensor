@@ -1,16 +1,15 @@
 // memsic 2125 accelerometer x,y UDP blaster
 // and ADXL345 x,y,z accelerometer
+#include <Wire.h>
 #include "Adafruit_Sensor.h"
 #include "Adafruit_ADXL345.h"
+#include "LipoFuelGauge.h"
 
 /* Assign a unique ID to this sensor at the same time */
 Adafruit_ADXL345 accel = Adafruit_ADXL345(12345);
 
 #include "WiFly_helpers.h"
-#include "memsic_2125.h"
-int woof_count=0;
-char udp_message[64];
-char count[16]="bogus";
+
 
 char *ftoa(char *a, double f, int precision)
 {
@@ -134,9 +133,10 @@ void setup()
 {
   Serial.begin(9600);
   Serial.println("Accelerometer UDP blaster test"); Serial.println("");
-  setup_2125();
   
-  /* Initialise the sensor */
+  setupLipoFuelGauge();
+
+  /* Initialise the accel sensor */
   if(!accel.begin())
   {
     /* There was a problem detecting the ADXL345 ... check your connections */
@@ -159,6 +159,8 @@ void loop()
   bool good_measurement=false;
   char  xs[16],ys[16],zs[16];
   sensors_event_t event; 
+  char udp_message[64];
+  int this_minute;
 
   //good_measurement = read_2125(&x,&y);
 
@@ -172,8 +174,16 @@ void loop()
 
 
   Send_UDP_Packet(udp_message);
-	Serial.println(udp_message);
+  Serial.println(udp_message);
 
+  this_minute = millis() / 1000L;
+  if(this_minute % 10) {
+    int battery_percentage = getLiPoStatus();
+    if( battery_percentage < 90 ) {
+      Serial.println("Time to panic battery low"); 
+    }
+      
+  }
   delay(500);
 
 }
