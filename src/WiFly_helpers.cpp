@@ -42,6 +42,7 @@ int associate_with_access_point() {
   SpiSerial.print("$$$");echo();
   SpiSerial.print(join_cmd);SpiSerial.print("\r");echo();
   SpiSerial.print("exit\r");echo();
+  return true; //TODO: check if AP association actually worked and return result
 }
 
 
