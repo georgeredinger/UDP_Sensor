@@ -1,16 +1,8 @@
-<<<<<<< HEAD
 Credentials.h
 .build
 *.swp
 *.*~
-*.mp3
-
-
-
-=======
-*.part
-*.mp*
 *.log
-node_modules/
->>>>>>> 6f9b7c81731fbd8c45a4fb172a4be4a1aec84ca2
+tags
+
 

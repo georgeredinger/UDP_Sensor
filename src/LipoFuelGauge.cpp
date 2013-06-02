@@ -19,14 +19,18 @@ int alertPin = 2;  // This is the alert interrupt pin, connected to pin 2 on the
 unsigned int i2cRead16(unsigned char address)
 {
     int data = 0;
+		unsigned timeout=0;
 
     Wire.beginTransmission(MAX17043_ADDRESS);
     Wire.write(address);
     Wire.endTransmission();
 
     Wire.requestFrom(MAX17043_ADDRESS, 2);
-    while (Wire.available() < 2)
-        ;
+    while (Wire.available() < 2){
+			timeout++;
+			if(timeout > 65533) 
+				 break; //should reset hardware, etc...
+		}
     data = ((int) Wire.read()) << 8;
     data |= Wire.read();
 

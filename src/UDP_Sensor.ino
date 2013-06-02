@@ -1,5 +1,8 @@
-// memsic 2125 accelerometer x,y UDP blaster
-// and ADXL345 x,y,z accelerometer
+// ADXL345 x,y,z accelerometer
+// MAX17043 lipo fuel gauge
+// ld
+//  build
+//  Roving Networks WiFly shield WRL-09954 
 #include <Wire.h>
 #include "Adafruit_Sensor.h"
 #include "Adafruit_ADXL345.h"
@@ -10,6 +13,7 @@ Adafruit_ADXL345 accel = Adafruit_ADXL345(12345);
 
 #include "WiFly_helpers.h"
 
+long last_battery_report=0L;
 
 char *ftoa(char *a, double f, int precision)
 {
@@ -141,7 +145,7 @@ void setup()
   {
     /* There was a problem detecting the ADXL345 ... check your connections */
     Serial.println("Ooops, no ADXL345 detected ... Check your wiring!");
-    while(1);
+    //while(1);
   }
   
   /* Display some basic information on this sensor */
@@ -161,12 +165,13 @@ void loop()
   sensors_event_t event; 
   char udp_message[64];
   int this_minute;
-
+  long now = millis() / 1000L;
   //good_measurement = read_2125(&x,&y);
 
   accel.getEvent(&event);
 
-  sprintf(udp_message,"{\"x\":\"%s\",\"y\":\"%s\",\"z\":\"%s\"}"
+  sprintf(udp_message,"{\"t\":\"%d\",\"x\":\"%s\",\"y\":\"%s\",\"z\":\"%s\"}"
+			,now
 			,ftoa(xs,event.acceleration.x,2)
       ,ftoa(ys,event.acceleration.y,2)
       ,ftoa(zs,event.acceleration.z,2)
@@ -176,15 +181,18 @@ void loop()
   Send_UDP_Packet(udp_message);
   Serial.println(udp_message);
 
-  this_minute = millis() / 1000L;
-  if(this_minute % 10) {
+  if((now-last_battery_report) > 60L) {
+		last_battery_report=now;
     int battery_percentage = getLiPoStatus();
+    sprintf(udp_message,"{\"batt\":\"%d\"}",battery_percentage);
+    Send_UDP_Packet(udp_message);
+    Serial.println(udp_message);
+
     if( battery_percentage < 90 ) {
       Serial.println("Time to panic battery low"); 
     }
-      
   }
-  delay(500);
+  delay(1000);
 
 }
 
