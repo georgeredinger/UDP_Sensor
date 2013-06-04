@@ -161,38 +161,32 @@ void setup()
 void loop()
 {
   bool good_measurement=false;
-  char  xs[16],ys[16],zs[16];
+  char  xs[16],ys[16],zs[16],volts[16];
   sensors_event_t event; 
   char udp_message[64];
   int this_minute;
   long now = millis() / 1000L;
-  //good_measurement = read_2125(&x,&y);
 
   accel.getEvent(&event);
 
-  sprintf(udp_message,"{\"t\":\"%d\",\"x\":\"%s\",\"y\":\"%s\",\"z\":\"%s\"}"
+  sprintf(udp_message,"{\"t\":\"%lu\",\"x\":\"%s\",\"y\":\"%s\",\"z\":\"%s\"}\r\n"
 			,now
 			,ftoa(xs,event.acceleration.x,2)
       ,ftoa(ys,event.acceleration.y,2)
       ,ftoa(zs,event.acceleration.z,2)
 			);
 
-
   Send_UDP_Packet(udp_message);
   Serial.println(udp_message);
 
   if((now-last_battery_report) > 60L) {
 		last_battery_report=now;
-    int battery_percentage = getLiPoStatus();
-    sprintf(udp_message,"{\"batt\":\"%d\"}",battery_percentage);
+    float battery_voltage = getLiPoStatus();
+    sprintf(udp_message,"{\"batt\":\"%s\"}\r\n",ftoa(volts,battery_voltage,2));
     Send_UDP_Packet(udp_message);
     Serial.println(udp_message);
-
-    if( battery_percentage < 90 ) {
-      Serial.println("Time to panic battery low"); 
     }
-  }
-  delay(1000);
+  delay(100);
 
 }
 
