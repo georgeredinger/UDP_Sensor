@@ -1,5 +1,5 @@
 class Accelerometer {
   Accelerometer() {;};
-  info();
-  measure();
+  int info();
+  int *measure(int []);
 };

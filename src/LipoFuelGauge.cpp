@@ -124,19 +124,19 @@ void setupLipoFuelGauge(){
   configMAX17043(32);  // Configure the MAX17043's alert percentage
   qsMAX17043();  // restart fuel-gauge calculations
 }
-int getLiPoStatus() {
+float getLiPoStatus() {
     batPercentage = percentMAX17043();
     batVoltage = (float) vcellMAX17043() * 1/800;  // vcell reports battery in 1.25mV increments
     alertStatus = digitalRead(alertPin);
 
-//    Serial.print(batPercentage, 2);  // Print the battery percentage
-//    Serial.println(" %");
-//    Serial.print(batVoltage, 2);  // print battery voltage
-//    Serial.println(" V");
-//    Serial.print("Alert Status = ");
-//    Serial.println(alertStatus, DEC);
-//    Serial.println();
-    return batPercentage;
+    Serial.print(batPercentage, 2);  // Print the battery percentage
+    Serial.println(" %");
+    Serial.print(batVoltage, 2);  // print battery voltage
+    Serial.println(" V");
+    Serial.print("Alert Status = ");
+    Serial.println(alertStatus, DEC);
+    Serial.println();
+    return batVoltage;
 }
 
 

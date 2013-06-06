@@ -1,3 +1,3 @@
 extern void setupLipoFuelGauge();
-extern int getLiPoStatus();
+extern float getLiPoStatus();
 
