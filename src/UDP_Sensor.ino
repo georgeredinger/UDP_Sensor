@@ -30,7 +30,7 @@ void setup()
   Serial.begin(9600);
   Serial.println("Accelerometer UDP blaster test"); Serial.println("");
 
-  setupLipoFuelGauge();
+//  setupLipoFuelGauge();
 
   if(!accel.begin())
   {
