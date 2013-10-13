@@ -1,19 +1,16 @@
 // ADXL345 x,y,z accelerometer
 // MAX17043 lipo fuel gauge
 // Roving Networks WiFly shield WRL-09954 
-//#include <Wire.h>
-//#include "Adafruit_Sensor.h"
-//#include "Adafruit_ADXL345.h"
-//#include "LipoFuelGauge.h"
-//#include "WiFly_helpers.h"
+#include <Wire.h>
+#include "Adafruit_Sensor.h"
+#include "Adafruit_ADXL345.h"
+#include "LipoFuelGauge.h"
+#include "WiFly_helpers.h"
 
 /* Assign a unique ID to this sensor at the same time */
-//Adafruit_ADXL345 accel = Adafruit_ADXL345(12345);
-#define F_CPU 16000000UL
-#define BAUD 9600
-
-#include <util/setbaud.h>
-
+Adafruit_ADXL345 accel = Adafruit_ADXL345(12345);
+ 
+ 
 long last_battery_report=0L;
 
 char *ftoa(char *a, double f, int precision)
@@ -29,37 +26,34 @@ char *ftoa(char *a, double f, int precision)
 	return ret;
 }
 
+
 void setup()
 {
-	UBRR0H = UBRRH_VALUE;
-	UBRR0L = UBRRL_VALUE;
-  UCSR0A |= _BV(U2X0);
-  Serial.begin(19200); //actually 4800 baud with 8 mhz
-  Serial.print("BEGIN"); 
-
+  Serial.begin(57600); 
+  Serial.println(("BEGIN")); 
 //  setupLipoFuelGauge();
 
 //  if(!accel.begin())
 //  {
 //    Serial.println("Ooops, no ADXL345 detected ... Check your wiring!");
-//    //while(1);
+//    while(1);
 //  }
-//
-//  if(!associate_with_access_point()) {
-//    Serial.println("WiFi association failed");
-//  }
-//  associate_with_access_point();
 
+ // if(!associate_with_access_point()) {
+ //   Serial.println("WiFi association failed");
+ // } else {
+ // 	Serial.println("WiFi association success");
+ // }
+// associate_with_access_point();
 }
-
 void loop()
 {
     bool good_measurement=false;
-    char  xs[16],ys[16],zs[16],volts[16];
+//    char  xs[16],ys[16],zs[16],volts[16];
     //sensors_event_t event; 
-    char udp_message[64];
+    char udp_message[16];
     int this_minute;
-    long now = millis() / 100L;
+    unsigned long now = millis() / 1000L;
     
     //accel.getEvent(&event);
 
@@ -76,12 +70,12 @@ void loop()
 //            ,"3"
 //           );
 //
-
+//sprintf(udp_message,"%lu",now);
 //    Send_UDP_Packet(udp_message);
     //Serial.println(udp_message);
 
-    delay(200);
-	  //Serial.write(lowByte('U'));	
-	  Serial.print(now);	
-
+//   delay(5000);
+//   Serial.println(udp_message);
 }
+
+
