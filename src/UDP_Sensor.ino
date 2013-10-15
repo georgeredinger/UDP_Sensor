@@ -2,35 +2,40 @@
 // MAX17043 lipo fuel gauge
 // Roving Networks WiFly shield WRL-09954 
 #include <Wire.h>
-#include "Adafruit_Sensor.h"
-#include "Adafruit_ADXL345.h"
-#include "LipoFuelGauge.h"
+//#include "Adafruit_Sensor.h"
+//#include "Adafruit_ADXL345.h"
+//#include "LipoFuelGauge.h"
 #include "WiFly_helpers.h"
+#include "WiFly.h"
 
 /* Assign a unique ID to this sensor at the same time */
-Adafruit_ADXL345 accel = Adafruit_ADXL345(12345);
- 
- 
+//Adafruit_ADXL345 accel = Adafruit_ADXL345(12345);
+
+
 long last_battery_report=0L;
 
-char *ftoa(char *a, double f, int precision)
-{
-	long p[] = {0,10,100,1000,10000,100000,1000000,10000000,100000000};
-	char *ret = a;
-	long heiltal = (long)f;
-	itoa(heiltal, a, 10);
-	while (*a != '\0') a++;
-	*a++ = '.';
-	long desimal = abs((long)((f - heiltal) * p[precision]));
-	itoa(desimal, a, 10);
-	return ret;
-}
-
+//char *ftoa(char *a, double f, int precision)
+//{
+//	long p[] = {0,10,100,1000,10000,100000,1000000,10000000,100000000};
+//	char *ret = a;
+//	long heiltal = (long)f;
+//	itoa(heiltal, a, 10);
+//	while (*a != '\0') a++;
+//	*a++ = '.';
+//	long desimal = abs((long)((f - heiltal) * p[precision]));
+//	itoa(desimal, a, 10);
+//	return ret;
+//}
+//
 
 void setup()
 {
-  Serial.begin(57600); 
-  Serial.println(("BEGIN")); 
+  Serial.begin(9600); 
+  Serial.println("BEGIN"); 
+	delay(1000);
+	//
+
+//Serial.println("Done");
 //  setupLipoFuelGauge();
 
 //  if(!accel.begin())
@@ -39,22 +44,22 @@ void setup()
 //    while(1);
 //  }
 
- // if(!associate_with_access_point()) {
- //   Serial.println("WiFi association failed");
- // } else {
- // 	Serial.println("WiFi association success");
- // }
+  if(!associate_with_access_point()) {
+    Serial.println("WiFi association failed");
+  } else {
+  	Serial.println("WiFi association success");
+  }
 // associate_with_access_point();
 }
 void loop()
 {
     bool good_measurement=false;
-//    char  xs[16],ys[16],zs[16],volts[16];
-    //sensors_event_t event; 
+    //char  xs[16],ys[16],zs[16],volts[16];
+    //sensors_event_t event;
     char udp_message[16];
     int this_minute;
     unsigned long now = millis() / 1000L;
-    
+
     //accel.getEvent(&event);
 
 //    sprintf(udp_message,"{\"t\":\"%lu\",\"x\":\"%s\",\"y\":\"%s\",\"z\":\"%s\"}\r\n"
@@ -70,12 +75,12 @@ void loop()
 //            ,"3"
 //           );
 //
-//sprintf(udp_message,"%lu",now);
-//    Send_UDP_Packet(udp_message);
-    //Serial.println(udp_message);
+sprintf(udp_message,"%lu",now);
+    Send_UDP_Packet(udp_message);
+//Serial.println(udp_message);
+Serial.println(udp_message);
 
-//   delay(5000);
-//   Serial.println(udp_message);
+   delay(1000);
 }
 
 
