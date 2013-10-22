@@ -7,18 +7,6 @@ extern int __bss_end;
 extern int *__brkval;
 
 
-int get_free_memory()
-{
-	  int free_memory;
-
-		  if((int)__brkval == 0)
-				    free_memory = ((int)&free_memory) - ((int)&__bss_end);
-			  else
-					    free_memory = ((int)&free_memory) - ((int)__brkval);
-
-				  return free_memory;
-}
-
 
 void echo() {
     delay(500);
@@ -28,10 +16,7 @@ void echo() {
 }
 
 void Send_UDP_Packet(char *udp_message){
-//	WiFly.restore();
-	Serial.println(get_free_memory());
   SpiSerial.print(udp_message); 
-//	WiFly.end();
 }
 
 int associate_with_access_point() {

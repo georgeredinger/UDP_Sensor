@@ -64,16 +64,16 @@ void setup()
 }
 void loop()
 {
-	char udp_message[36];
+	char udp_message[16];
 	int x,y,z;
 	unsigned long now;
   for(;;){
 	  now = millis() / 1000L;
     readAccel(&x,&y,&z); 
-	  sprintf(udp_message,"%d,%d,%d",x,y,z);
+	  sprintf(udp_message,"%3d,%3d,%3d\r\n",x,y,z);
 	  Serial.print(udp_message);
 	  Send_UDP_Packet(udp_message);
-	  delay(1000);
+	  delay(100);
 	}
 }
 
