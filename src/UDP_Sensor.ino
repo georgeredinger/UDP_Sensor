@@ -1,86 +1,81 @@
 // ADXL345 x,y,z accelerometer
-// MAX17043 lipo fuel gauge
 // Roving Networks WiFly shield WRL-09954 
 #include <Wire.h>
-//#include "Adafruit_Sensor.h"
-//#include "Adafruit_ADXL345.h"
-//#include "LipoFuelGauge.h"
 #include "WiFly_helpers.h"
 #include "WiFly.h"
+#include <Wire.h>
+#define DEVICE (0x53) // Device address as specified in data sheet 
 
-/* Assign a unique ID to this sensor at the same time */
-//Adafruit_ADXL345 accel = Adafruit_ADXL345(12345);
+byte _buff[6];
 
+char POWER_CTL = 0x2D;//Power Control Register
+char DATA_FORMAT = 0x2D31;
+char DATAX0 = 0x32;//X-Axis Data 0
+char DATAX1 = 0x33;//X-Axis DataFormatta 1
+char DATAY0 = 0x34;//Y-Axis Data 0
+char DATAY1 = 0x35;//Y-Axis Dataata 1
+char DATAZ0 = 0x36;//Z-Axis Data 0
+char DATAZ1 = 0x37;//Z-Axis 		Data 1
 
-long last_battery_report=0L;
+void writeTo(byte address, byte val) {
+	Wire.beginTransmission(DEVICE); // start transmission to device 
+	Wire.write(address);             // send register address
+	Wire.write(val);                 // send value to write
+	Wire.endTransmission();         // end transmission
+}
 
-//char *ftoa(char *a, double f, int precision)
-//{
-//	long p[] = {0,10,100,1000,10000,100000,1000000,10000000,100000000};
-//	char *ret = a;
-//	long heiltal = (long)f;
-//	itoa(heiltal, a, 10);
-//	while (*a != '\0') a++;
-//	*a++ = '.';
-//	long desimal = abs((long)((f - heiltal) * p[precision]));
-//	itoa(desimal, a, 10);
-//	return ret;
-//}
-//
+// Reads num bytes starting from address register on device in to _buff array
+void readFrom(byte address, int num, byte _buff[]) {
+	Wire.beginTransmission(DEVICE); // start transmission to device 
+	Wire.write(address);             // sends address to read from
+	Wire.endTransmission();         // end transmission
 
+	Wire.beginTransmission(DEVICE); // start transmission to device
+	Wire.requestFrom(DEVICE, num);    // request 6 bytes from device
+
+	int i = 0;
+	while(Wire.available())         // device may send less than requested (abnormal)
+	{
+		_buff[i] = Wire.read();    // receive a byte
+		i++;
+	}
+	Wire.endTransmission();         // end transmission
+}
+
+void readAccel(int *x,int *y,int *z) {
+	uint8_t howManyBytesToRead = 6;
+	readFrom( DATAX0, howManyBytesToRead, _buff); //read the acceleration data from the ADXL345
+
+	// each axis reading comes in 10 bit resolution, ie 2 bytes.  Least Significat Byte first!!
+	// thus we are converting both bytes in to one int
+	*x = (((int)_buff[1]) << 8) | _buff[0];   
+	*y = (((int)_buff[3]) << 8) | _buff[2];
+	*z = (((int)_buff[5]) << 8) | _buff[4];
+	}
 void setup()
 {
-  Serial.begin(9600); 
-  Serial.println("BEGIN"); 
-	delay(1000);
-	//
-
-//Serial.println("Done");
-//  setupLipoFuelGauge();
-
-//  if(!accel.begin())
-//  {
-//    Serial.println("Ooops, no ADXL345 detected ... Check your wiring!");
-//    while(1);
-//  }
-
-  if(!associate_with_access_point()) {
-    Serial.println("WiFi association failed");
-  } else {
-  	Serial.println("WiFi association success");
-  }
-// associate_with_access_point();
+	Wire.begin();
+	Serial.begin(9600);
+ //Put the ADXL345 into +/- 4G range by writing the value 0x01 to the DATA_FORMAT register.
+   writeTo(DATA_FORMAT, 0x01);
+ //Put the ADXL345 into Measurement Mode by writing 0x08 to the POWER_CTL register.
+       writeTo(POWER_CTL, 0x08);
+  associate_with_access_point();
 }
 void loop()
 {
-    bool good_measurement=false;
-    //char  xs[16],ys[16],zs[16],volts[16];
-    //sensors_event_t event;
-    char udp_message[16];
-    int this_minute;
-    unsigned long now = millis() / 1000L;
-
-    //accel.getEvent(&event);
-
-//    sprintf(udp_message,"{\"t\":\"%lu\",\"x\":\"%s\",\"y\":\"%s\",\"z\":\"%s\"}\r\n"
-//            ,now
-//            ,ftoa(xs,event.acceleration.x,2)
-//            ,ftoa(ys,event.acceleration.y,2)
-//            ,ftoa(zs,event.acceleration.z,2)
-//           );
-// sprintf(udp_message,"{\"t\":\"%lu\",\"x\":\"%s\",\"y\":\"%s\",\"z\":\"%s\"}\r\n"
-//            ,now
-//            ,"1"
-//            ,"2"
-//            ,"3"
-//           );
-//
-sprintf(udp_message,"%lu",now);
-    Send_UDP_Packet(udp_message);
-//Serial.println(udp_message);
-Serial.println(udp_message);
-
-   delay(1000);
+	char udp_message[36];
+	int x,y,z;
+	unsigned long now;
+  for(;;){
+	  now = millis() / 1000L;
+    readAccel(&x,&y,&z); 
+	  sprintf(udp_message,"%d,%d,%d",x,y,z);
+	  Serial.print(udp_message);
+	  Send_UDP_Packet(udp_message);
+	  delay(1000);
+	}
 }
 
+ 
 

@@ -3,6 +3,23 @@
 
 extern void reset_now();
 
+extern int __bss_end;
+extern int *__brkval;
+
+
+int get_free_memory()
+{
+	  int free_memory;
+
+		  if((int)__brkval == 0)
+				    free_memory = ((int)&free_memory) - ((int)&__bss_end);
+			  else
+					    free_memory = ((int)&free_memory) - ((int)__brkval);
+
+				  return free_memory;
+}
+
+
 void echo() {
     delay(500);
     while(SpiSerial.available() > 0) {
@@ -11,7 +28,10 @@ void echo() {
 }
 
 void Send_UDP_Packet(char *udp_message){
+//	WiFly.restore();
+	Serial.println(get_free_memory());
   SpiSerial.print(udp_message); 
+//	WiFly.end();
 }
 
 int associate_with_access_point() {
@@ -24,12 +44,10 @@ int associate_with_access_point() {
 //  strcat(join_cmd,ssid);
 //  reset_now(); // allways start with factory defaults to insure  repeatable setup
 	WiFly.begin();
-  SpiSerial.print(("set wlan ssid WhiteSpace\r"));echo();
-  SpiSerial.print(("set wlan auth 4\r"));echo();
-//	delay(500);
-//	SpiSerial.print(("\r"));
-//	echo();
- // SpiSerial.print(phrase_cmd);SpiSerial.print(("\r"));echo();
+  SpiSerial.print("set wlan ssid WhiteSpace\r");echo();
+  SpiSerial.print("set wlan auth 4\r");echo();
+// SpiSerial.print(("\r"));	echo();
+// SpiSerial.print(phrase_cmd);SpiSerial.print(("\r"));echo();
 // SpiSerial.print(join_cmd);SpiSerial.print(("\r"));echo();
 
   SpiSerial.print(("set ip proto 1\r"));echo();
